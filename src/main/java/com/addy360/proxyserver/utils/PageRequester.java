@@ -1,6 +1,7 @@
 package com.addy360.proxyserver.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -30,4 +31,28 @@ public class PageRequester {
         return page.toString();
     }
 
+    public String requestUrl(String url) {
+        log.info("Sending request : {}", url);
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .post(RequestBody.create("", MediaType.parse("application/json")))
+                .addHeader("User-Agent", "PostmanRuntime/7.29.0")
+                .build();
+
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        try {
+            Response response = client.newCall(request).execute();
+            if (response.code() != 200) {
+                log.info("Error : {}", response.message());
+            }
+            ResponseBody body = response.body();
+            if (body == null) return "";
+            return body.string();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+
+
+    }
 }
