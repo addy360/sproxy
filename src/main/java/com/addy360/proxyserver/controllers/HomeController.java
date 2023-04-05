@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -19,6 +20,20 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class HomeController {
     private final PageRequester pageRequester;
+
+    @ResponseBody
+    @PostMapping("/api/v1/offer")
+    ResponseEntity<?> test(@RequestBody Map<String, String> data) {
+        log.info("Data received : {}", data);
+        return ResponseEntity.status(201).body("Request sent Successfully");
+    }
+
+    @ResponseBody
+    @PostMapping("/api/sms-status/receive")
+    ResponseEntity<?> receiveSmsStatusCallback(@RequestBody Map<String, Object> payload) {
+        log.info("Received sms status callback : {}", payload);
+        return ResponseEntity.ok("Callback received successfully");
+    }
 
     @GetMapping
     public String index(Model model) {
